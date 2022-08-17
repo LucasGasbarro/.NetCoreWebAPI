@@ -4,10 +4,7 @@ namespace SmartSchool.API.Model
 {
     public class Professor
     {
-        public Professor()
-        {
-
-        }
+        public Professor(){}
 
         public Professor(int id, string nome)
         {

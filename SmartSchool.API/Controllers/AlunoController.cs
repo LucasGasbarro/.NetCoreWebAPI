@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using SmartSchool.API.Model;
 using System.Linq;
 using SmartSchool.API.Data;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -63,6 +64,9 @@ namespace SmartSchool.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno aluno)
         {
+            var alu = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            if (alu == null) return BadRequest("Aluno não encontrado!");
+
             _context.Update(aluno);
             _context.SaveChanges();
             return Ok(aluno);
@@ -72,6 +76,9 @@ namespace SmartSchool.API.Controllers
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, Aluno aluno)
         {
+            var alu = _context.Alunos.AsNoTracking().FirstOrDefault(a => a.Id == id);
+            if (alu == null) return BadRequest("Aluno não encontrado!");
+
             _context.Update(aluno);
             _context.SaveChanges();
             return Ok(aluno);
@@ -81,7 +88,11 @@ namespace SmartSchool.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            var aluno = _context.Alunos.FirstOrDefault(a => a.Id ==id);
+            if (aluno == null) return BadRequest("Aluno não encontrado!");
 
+            _context.Remove(aluno);
+            _context.SaveChanges();
             return Ok();
         }
     }
