@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using SmartSchool.API.Model;
 using System.Linq;
+using SmartSchool.API.Data;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -11,43 +12,25 @@ namespace SmartSchool.API.Controllers
     [ApiController]
     public class AlunoController : ControllerBase
     {
-        public List<Aluno> Alunos = new List<Aluno>()
+        private readonly SmartContext _context;
+
+        public AlunoController(SmartContext context)
         {
-            new Aluno()
-            {
-                Id = 1,
-                Nome = "Marcos",
-                Sobrenome = "Schmidt",
-                Telefone = "(12)34567-8901"
-            },
-            new Aluno()
-            {
-                Id = 2,
-                Nome = "Marta",
-                Sobrenome = "Kent",
-                Telefone = "(11)11111-1111"
-            },
-            new Aluno()
-            {
-                Id = 3,
-                Nome = "Lucas",
-                Sobrenome = "Gasbarro",
-                Telefone = "(22)22222-2222"
-            },
-        };
+            _context = context;
+        }
 
         // GET: api/Aluno
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(Alunos);
+            return Ok(_context.Alunos);
         }
 
         // GET: api/Aluno/byId/{id}
         [HttpGet("byId/{id}")]
         public IActionResult GetById(int id)
         {
-            var aluno = Alunos.FirstOrDefault(aluno => aluno.Id == id);
+            var aluno = _context.Alunos.FirstOrDefault(aluno => aluno.Id == id);
 
             if (aluno == null) return BadRequest("Aluno não foi encontrado!");
 
@@ -58,7 +41,7 @@ namespace SmartSchool.API.Controllers
         [HttpGet("byName")]
         public IActionResult GetByNome(string nome, string sobrenome)
         {
-            var aluno = Alunos.FirstOrDefault(aluno => 
+            var aluno = _context.Alunos.FirstOrDefault(aluno => 
                 aluno.Nome.Contains(nome) && 
                 aluno.Sobrenome.Contains(sobrenome));
 
@@ -71,8 +54,8 @@ namespace SmartSchool.API.Controllers
         [HttpPost]
         public IActionResult Post(Aluno aluno)
         {
-            
-
+            _context.Add(aluno);
+            _context.SaveChanges();
             return Ok(aluno);
         }
 
@@ -80,7 +63,8 @@ namespace SmartSchool.API.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno aluno)
         {
-
+            _context.Update(aluno);
+            _context.SaveChanges();
             return Ok(aluno);
         }
 
@@ -88,7 +72,8 @@ namespace SmartSchool.API.Controllers
         [HttpPatch("{id}")]
         public IActionResult Patch(int id, Aluno aluno)
         {
-
+            _context.Update(aluno);
+            _context.SaveChanges();
             return Ok(aluno);
         }
 
