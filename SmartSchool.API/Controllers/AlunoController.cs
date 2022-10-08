@@ -14,10 +14,20 @@ namespace SmartSchool.API.Controllers
     public class AlunoController : ControllerBase
     {
         private readonly SmartContext _context;
+        private readonly IRepository _repo;
 
-        public AlunoController(SmartContext context)
+        public AlunoController(SmartContext context,
+                               IRepository repo)
         {
+            _repo = repo; 
             _context = context;
+        }
+
+        // GET: api/Aluno
+        [HttpGet("pegaResposta")]
+        public IActionResult pegaResposta()
+        {
+            return Ok(_repo.pegaResposta());
         }
 
         // GET: api/Aluno
